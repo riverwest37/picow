@@ -1,39 +1,44 @@
 # Pico W MQTT Doorbell Sender
 
-Raspberry Pi Pico W を使用して、  
-押しボタンスイッチ入力を MQTT イベントとして送信する実機送信モジュールです。
+本ディレクトリは Raspberry Pi Pico W を使用し、  
+押しボタンスイッチ入力を MQTT イベントとして送信するスクリプトです。
 
-本システムは、Pico W → MQTT → Node-RED → TV制御 の流れで構成されています。
+本書 **JB Net（爺婆Net）** に対応した、実機確認済み送信モジュールです。
 
 ---
 
 ## 概要
 
-Pico W は入力装置として動作し、ボタン押下時に MQTT へイベント送信します。
+Pico W は入力装置として動作し、ボタン入力を MQTT 経由で Node-RED に送信します。
 
 ```text
 ボタン入力
 ↓
 Pico W
-↓
+↓ Wi-Fi
 MQTT
 ↓
 Node-RED
 ↓
 TV制御 / 表示
 
-送信イベントは以下です。
+送信イベント：
 
 {"type":"doorbell"}
-実機確認済み
+実機確認済み動作
 
-以下の動作を確認済みです。
+以下の一連動作を確認済みです。
 
 Pico W ボタン押下
+↓
 Wi-Fi接続
+↓
 MQTT送信
+↓
 Node-RED受信
+↓
 doorbell判定
+↓
 TV制御
 ファイル構成
 picow/
@@ -77,24 +82,25 @@ MQTT接続完了
 doorbell送信
 Node-RED 側
 
-受信フローは nodered/genkan-event-receiver.json を参照してください。
+受信フローは以下を参照してください。
 
-受信 Topic:
+nodered/genkan-event-receiver.json
+
+受信 Topic：
 
 genkan/event
 テストボタンの利点
 
-ボタンスイッチを取り付けることで、
-実機センサーが無くても疑似信号テストが可能です。
+押しボタンを付けることで、センサー未接続でも確認できます。
 
 押せば即確認できる
 MQTT送信確認できる
 Node-RED受信確認できる
 トラブル切り分けに便利
 注意事項
-secrets.py は公開しない
-Topic 名は送受信で一致させる
-本番環境では既存Node-REDフローとの重複に注意
+secrets.py は GitHub 公開しない
+Topic 名は送受信側で一致させる
+本番環境では既存 Node-RED フローとの重複に注意
 完成状態
 Pico W
 ↓
@@ -102,14 +108,14 @@ MQTT
 ↓
 Node-RED
 ↓
-TV ON/OFF
+TV ON / OFF
 
 本構成は実機動作確認済みです。
 
 
 ---
 
-# 4. nodered/README.md（最新版）
+# 修正版 nodered/README.md
 
 ```markdown
 # Node-RED Flow for Pico W MQTT Doorbell
@@ -120,8 +126,6 @@ TV制御や表示処理を行う Node-RED フローです。
 ---
 
 ## 実機確認済み
-
-以下の流れを確認済みです。
 
 ```text
 Pico W ボタン押下
@@ -138,7 +142,7 @@ genkan-event-receiver.json
 読み込み方法
 Node-RED を開く
 右上メニュー
-読み込み（Import）
+Import（読み込み）
 JSONファイル選択
 Deploy
 基本フロー
@@ -162,8 +166,8 @@ HDMI切替
 表示制御
 注意事項
 
-既存の同一 Topic フローがある場合、
-二重動作防止のため既存フローを無効化してテストしてください。
+同一 Topic を使う既存フローがある場合は、
+二重動作防止のため一時停止してテストしてください。
 
 推奨手順
 既存フロー無効化
@@ -183,35 +187,3 @@ Deploy
 
 
 ---
-
-# あなたが今やること
-
-GitHubでこの2つを更新してください。
-
-```text
-README.md
-nodered/README.md
-# Pico W MQTT Doorbell Sender
-
-本ディレクトリは、Raspberry Pi Pico W を使用して  
-ボタンスイッチ入力を MQTT イベントとして送信するスクリプトを提供します。
-
-本書「JB Net（爺婆Net）」に対応した実機送信モジュールです。
-
----
-
-## ■ 概要
-
-Pico W は、センサーやスイッチ入力を取得し、  
-その情報を MQTT を通じて送信する役割を持ちます。
-
-```text
-ボタン入力
-↓
-Pico W
-↓
-MQTT
-↓
-Node-RED
-↓
-表示 / 制御
